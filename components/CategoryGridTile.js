@@ -5,7 +5,7 @@ import {
   Pressable,
   useWindowDimensions,
   Dimensions,
-  Platform
+  Platform,
 } from "react-native";
 import React from "react";
 
@@ -17,10 +17,13 @@ const CategoryGridTile = ({ title, color }) => {
   };
 
   let content = (
-    <View style={styles.gridLandscape}>
+    <View style={[styles.gridLandscape, {backgroundColor: color}]}>
       <Pressable
         android_ripple={{ color: "#ccc" }}
-        style={styles.button}
+        style={({ pressed }) => [
+          styles.button,
+          pressed ? styles.buttonPressed : null,
+        ]}
         onPress={handlePress}
       >
         <View style={styles.innerGrid}>
@@ -32,10 +35,13 @@ const CategoryGridTile = ({ title, color }) => {
 
   if (width < 380) {
     content = (
-      <View style={styles.gridLandscape}>
+      <View style={[styles.gridLandscape, {backgroundColor: color}]}>
         <Pressable
           android_ripple={{ color: "#ccc" }}
-          style={styles.button}
+          style={({ pressed }) => [
+            styles.button,
+            pressed ? styles.buttonPressed : null,
+          ]}
           onPress={handlePress}
         >
           <View style={styles.innerGrid}>
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
-    overflow: Platform.OS === 'android' ? 'hidden' : 'visible'
+    overflow: Platform.OS === "android" ? "hidden" : "visible",
   },
   gridLandscape: {
     flexDirection: "row",
@@ -78,6 +84,9 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+  },
+  buttonPressed: {
+    opacity: 0.2,
   },
   innerGrid: {
     flex: 1,
