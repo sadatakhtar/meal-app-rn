@@ -9,24 +9,20 @@ import {
 } from "react-native";
 import React from "react";
 
-const CategoryGridTile = ({ title, color }) => {
+const CategoryGridTile = ({ title, color, onPress }) => {
   const { width, height } = useWindowDimensions();
 
-  const handlePress = () => {
-    console.log("Pressed!");
-  };
-
   let content = (
-    <View style={[styles.gridLandscape, {backgroundColor: color}]}>
+    <View style={styles.gridLandscape}>
       <Pressable
         android_ripple={{ color: "#ccc" }}
         style={({ pressed }) => [
           styles.button,
           pressed ? styles.buttonPressed : null,
         ]}
-        onPress={handlePress}
+        onPress={onPress}
       >
-        <View style={styles.innerGrid}>
+        <View style={[styles.innerGrid , {backgroundColor: color}]}>
           <Text style={styles.title}>{title}</Text>
         </View>
       </Pressable>
@@ -35,16 +31,16 @@ const CategoryGridTile = ({ title, color }) => {
 
   if (width < 380) {
     content = (
-      <View style={[styles.gridLandscape, {backgroundColor: color}]}>
+      <View style={styles.gridLandscape}>
         <Pressable
           android_ripple={{ color: "#ccc" }}
           style={({ pressed }) => [
             styles.button,
             pressed ? styles.buttonPressed : null,
           ]}
-          onPress={handlePress}
+          onPress={onPress}
         >
-          <View style={styles.innerGrid}>
+          <View style={[styles.innerGrid , {backgroundColor: color}]}>
             <Text style={styles.title}>{title}</Text>
           </View>
         </Pressable>
