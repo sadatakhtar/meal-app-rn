@@ -1,30 +1,32 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  FlatList,
-  SectionList,
-} from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useLayoutEffect } from "react";
+import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import { EvilIcons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 import { MEALS } from "../data/dummy-data";
+import { useNavigation } from "@react-navigation/native";
+import SubTitle from "../components/SubTitle";
+import List from "../components/List";
+import IconButton from "../components/IconButton";
 
 const MealDetailsScreen = () => {
   const route = useRoute();
-  // const navigate = useNavigation();
-
+  const navigate = useNavigation();
   const mealId = route.params.mealId;
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
 
-  // const renderIngredientsItems = (itemData) => {
-  //   return <Text style={styles.textFont}>{itemData.item}</Text>;
-  // };
+  const handleHeaderBtn = () => {
+    console.log("Header button pressed!!!");
+  };
 
-  // const renderSteps = (itemData) => {
-  //   return <Text style={styles.textFont}>{itemData.item}</Text>;
-  // };
+  useLayoutEffect(() => {
+    navigate.setOptions({
+      headerRight: () => {
+        return (
+          <IconButton onPress={handleHeaderBtn} icon="star" color="white" />
+        );
+      },
+    });
+  }, [navigate, handleHeaderBtn]);
 
   return (
     <ScrollView style={styles.screen}>
@@ -36,47 +38,37 @@ const MealDetailsScreen = () => {
       </View>
 
       <View style={styles.description}>
-        <Text style={styles.subHeadings}>General</Text>
-        <Text style={styles.textFont}>
-          <Text style={[styles.innerTags, styles.textFont]}>Duration:</Text>{" "}
-          {selectedMeal.duration} minutes
-        </Text>
-        <Text style={styles.textFont}>
-          <Text style={[styles.innerTags, styles.textFont]}>Complexity:</Text>{" "}
-          {selectedMeal.complexity}
-        </Text>
-        <Text style={styles.textFont}>
-          <Text style={[styles.innerTags, styles.textFont]}>
-            Affordability:
+        <SubTitle>General</SubTitle>
+        <View style={styles.innerContainer}>
+          <Text style={styles.textFont}>
+            <Text style={[styles.innerTags, styles.textFont]}>Duration:</Text>{" "}
+            {selectedMeal.duration} minutes
           </Text>
-          {selectedMeal.affordability}
-        </Text>
+          <Text style={styles.textFont}>
+            <Text style={[styles.innerTags, styles.textFont]}>Complexity:</Text>{" "}
+            {selectedMeal.complexity}
+          </Text>
+          <Text style={styles.textFont}>
+            <Text style={[styles.innerTags, styles.textFont]}>
+              Affordability:
+            </Text>
+            {selectedMeal.affordability}
+          </Text>
+        </View>
       </View>
+
       <View style={styles.description}>
-        <Text style={[styles.textFont, styles.subHeadings]}>Ingredients</Text>
-        {/* <FlatList
-          data={selectedMeal.ingredients}
-          renderItem={renderIngredientsItems}
-          keyExtractor={(item) => item.id}
-        /> */}
-        {selectedMeal.ingredients.map((ingredient) => (
-          <Text style={styles.textFont} key={ingredient}>
-            {ingredient}
-          </Text>
-        ))}
+        <SubTitle>Ingredients</SubTitle>
+        <View style={styles.innerContainer}>
+          <List data={selectedMeal.ingredients} />
+        </View>
       </View>
+
       <View style={styles.description}>
-        <Text style={styles.subHeadings}>Steps</Text>
-        {/* <FlatList
-          data={selectedMeal.steps}
-          renderItem={renderSteps}
-          keyExtractor={(item) => item.id}
-        /> */}
-        {selectedMeal.steps.map((step) => (
-          <Text style={styles.textFont} key={step}>
-            {step}
-          </Text>
-        ))}
+        <SubTitle>Steps</SubTitle>
+        <View style={styles.innerContainer}>
+          <List data={selectedMeal.steps} />
+        </View>
       </View>
     </ScrollView>
   );
@@ -87,6 +79,7 @@ export default MealDetailsScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    marginBottom: 32,
   },
   textFont: {
     color: "white",
@@ -97,10 +90,10 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
+    height: 350,
   },
   imageContainer: {
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "white",
     borderRadius: 8,
     overflow: "hidden",
@@ -112,20 +105,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 22,
   },
-  subHeadings: {
-    fontSize: 20,
-    textAlign: "center",
-    color: "white",
-    fontWeight: "500",
-    marginBottom: 8,
-  },
+
   description: {
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "white",
     margin: 8,
     borderRadius: 8,
-    padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 20,
+  },
+  stepsContainer: {
+    flexDirection: "row",
+  },
+  innerContainer: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
 });
