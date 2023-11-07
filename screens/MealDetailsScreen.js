@@ -1,32 +1,53 @@
 import { useLayoutEffect } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
-import { EvilIcons } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
 import { MEALS } from "../data/dummy-data";
 import { useNavigation } from "@react-navigation/native";
 import SubTitle from "../components/SubTitle";
 import List from "../components/List";
 import IconButton from "../components/IconButton";
+import { useSelector, useDispatch } from "react-redux";
+// import { FavoritesContext } from "../store/context/favorites-context";
+import { addFavorite, removeFavorite } from "../store/redux/favorites";
 
 const MealDetailsScreen = () => {
+  // const favoriteMealsCtx = useContext(FavoritesContext);
+  const favoriteMealIds = useSelector((state) => state.favoriteMeals.ids);
+
   const route = useRoute();
   const navigate = useNavigation();
+  const dispatch = useDispatch();
+
   const mealId = route.params.mealId;
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
 
-  const handleHeaderBtn = () => {
-    console.log("Header button pressed!!!");
+  // const mealIsFavorite = favoriteMealsCtx.ids.includes(mealId);
+  // const mealIsFavorite = favoriteMealsCtx && favoriteMealsCtx.ids.includes(mealId);
+  const mealIsFavorite = favoriteMealIds.includes(mealId);
+
+  const changeFavoriteStatusHandler = () => {
+    if (mealIsFavorite) {
+      // favoriteMealsCtx.removeFavorite(mealId);
+      dispatch(removeFavorite({id: mealId}));
+    } else {
+      // favoriteMealsCtx.addFavorite(mealId);
+      dispatch(addFavorite({ id: mealId}));
+    }
   };
 
   useLayoutEffect(() => {
     navigate.setOptions({
       headerRight: () => {
         return (
-          <IconButton onPress={handleHeaderBtn} icon="star" color="white" />
+          <IconButton
+            onPress={changeFavoriteStatusHandler}
+            icon={mealIsFavorite ? "star" : "star-outline"}
+            color="white"
+          />
         );
       },
     });
-  }, [navigate, handleHeaderBtn]);
+  }, [navigate, changeFavoriteStatusHandler]);
 
   return (
     <ScrollView style={styles.screen}>
